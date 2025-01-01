@@ -1,5 +1,4 @@
 using Meyer.Parts;
-using Meyer.Parts.DatabaseAccess;
 using Meyer.Exceptions;
 using Meyer.Services.Extensions;
 using Meyer.Services.Extensions.Exceptions;
@@ -8,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Meyer.Exceptions.Connector;
 using Meyer.Services.Extensions.Connectors;
 using Microsoft.EntityFrameworkCore;
+using Meyer.Parts.DatabaseAccess.Services;
+using Meyer.Parts.DatabaseAccess.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,7 @@ builder.Services.AddServiceHttpClient(servicesUrl);
 builder.Services.AddScoped<IServiceExceptionsService, ServiceExceptionHttpService>();
 
 // Project Services
-builder.Services.AddScoped<IPartsService, PartsDatabaseService>();
+builder.Services.AddScoped<IPartsService, PartsService>();
 
 // Core
 var app = builder.Build();
