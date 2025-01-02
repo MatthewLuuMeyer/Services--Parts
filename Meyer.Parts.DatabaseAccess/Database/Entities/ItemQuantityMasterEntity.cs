@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Meyer.Parts.DatabaseAccess.Database.Entities
 {
-    [Table("IV00102")]
+    [PrimaryKey(nameof(ItemNumber), nameof(LocationCode), nameof(RecordType))]
+    [Table("IV00102", Schema = "dbo")]
     public class ItemQuantityMasterEntity
     {
         [Key]

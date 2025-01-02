@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Meyer.Amazon.Api": {
+    "Meyer.Parts.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

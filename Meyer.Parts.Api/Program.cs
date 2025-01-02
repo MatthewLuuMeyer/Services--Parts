@@ -9,33 +9,68 @@ using Meyer.Services.Extensions.Connectors;
 using Microsoft.EntityFrameworkCore;
 using Meyer.Parts.DatabaseAccess.Services;
 using Meyer.Parts.DatabaseAccess.Database;
+using AutoMapper;
+using Meyer.Parts.DatabaseAccess.Database.Entities;
+using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Core
-builder.AddSwaggerAndFluentValidation<Program>();
-builder.Services.AddControllers();
-
-// Database Configuration
-var meyerConnectionString = builder.Configuration.GetSection("DatabaseConnectionStrings")["MeyerLogicReadWriteConnectionString"];
-builder.Services.AddDbContext<PartsDatabaseContext>(options =>
+internal class Program
 {
-    options.UseSqlServer(meyerConnectionString);
-});
+    private const string _serviceName = "Parts Service";
 
-// Services Configuration
-var servicesUrl = builder.Configuration.GetSection("ServiceUrls")["ReverseProxy"];
-builder.Services.AddServiceHttpClient(servicesUrl);
-builder.Services.AddScoped<IServiceExceptionsService, ServiceExceptionHttpService>();
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-// Project Services
-builder.Services.AddScoped<IPartsService, PartsService>();
+        // Core
+        builder.AddSwaggerAndFluentValidation<Program>();
+        builder.Services.AddControllers();
 
-// Core
-var app = builder.Build();
+        var autoMapperConfig = new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<ItemQuantityMasterEntity, ItemQuantity>();
+        });
+        var autoMapper = autoMapperConfig.CreateMapper();
+        builder.Services.AddSingleton(autoMapper);
 
-app.AddSwagger();
-app.MapControllers();
-app.AddExceptionHandling("Amazon");
+        // Services Configuration
+        var servicesUrl = builder.Configuration.GetSection("ServiceUrls")["ReverseProxy"];
+        builder.Services.AddServiceHttpClient(servicesUrl);
+        builder.Services.AddScoped<IServiceExceptionsService, ServiceExceptionHttpService>();
 
-app.Run();
+        builder.AddSwaggerAndFluentValidation<Program>();
+        builder.Services.AddControllers();
+
+        // Database Configuration
+        var meyerConnectionString = builder.Configuration.GetSection("DatabaseConnectionStrings")["Meyer"];
+        builder.Services.AddDbContext<PartsDatabaseContext>(options =>
+        {
+            options.UseSqlServer(meyerConnectionString);
+        });
+
+        // Project Services
+        builder.Services.AddScoped<IPartsService, PartsService>();
+
+        // Core
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.AddSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", _serviceName);
+                c.RoutePrefix = string.Empty;
+                c.DocExpansion(DocExpansion.None);
+            });
+        }
+
+        app.MapControllers();
+        app.AddExceptionHandling(_serviceName);
+        app.UseAuthorization();
+
+        app.Run();
+    }
+}
+
+

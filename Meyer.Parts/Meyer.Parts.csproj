@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>Meyer Service - Amazon</Title>
+    <Title>Meyer Service - Parts</Title>
   </PropertyGroup>
 
 </Project>

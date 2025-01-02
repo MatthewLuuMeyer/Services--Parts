@@ -5,6 +5,6 @@ namespace Meyer.Parts
 {
     public interface IPartsService
     {
-        Task<List<ItemQuantity>> GetItemQuantities(List<string> itemNumbers);
+        Task<List<ItemQuantity>> GetItemQuantities(List<ItemLocationRequest> items);
     }
 }
