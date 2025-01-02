@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Meyer.Services.Connectors.Http" Version="2.0.6" />
+    <PackageReference Include="Meyer.Services.Extensions.Connectors" Version="1.1.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Meyer.Parts\Meyer.Parts.csproj" />
+  </ItemGroup>
+
 </Project>
